@@ -1,0 +1,77 @@
+diff -up openlitespeed-1.7.16/CMakeLists.txt.4~ openlitespeed-1.7.16/CMakeLists.txt
+--- openlitespeed-1.7.16/CMakeLists.txt.4~	2022-05-13 20:30:06.000000000 +0200
++++ openlitespeed-1.7.16/CMakeLists.txt	2022-07-16 06:44:26.801416321 +0200
+@@ -139,7 +139,7 @@ SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_D
+ set(BSSL_ADD_LIB  libdecrepit.a)
+ ##########################################################################################
+ #If you want to use Brotli Compression, just un-comment out the following commands
+-set(BROTLI_ADD_LIB  libbrotlidec-static.a libbrotlienc-static.a libbrotlicommon-static.a)
++set(BROTLI_ADD_LIB  brotlidec brotlienc brotlicommon)
+ add_definitions(-DUSE_BROTLI)
+ ##########################################################################################
+ #If you want to use IP2Location, just un-comment out the following commands
+diff -up openlitespeed-1.7.16/src/CMakeLists.txt.4~ openlitespeed-1.7.16/src/CMakeLists.txt
+--- openlitespeed-1.7.16/src/CMakeLists.txt.4~	2022-07-16 06:44:26.801416321 +0200
++++ openlitespeed-1.7.16/src/CMakeLists.txt	2022-07-16 07:26:02.302332023 +0200
+@@ -153,7 +153,7 @@ SET( litespeedlib
+     socket sslpp lsshm thread log4cxx adns 
+     quic h2 lsquic -Wl,--whole-archive util lsr -Wl,--no-whole-archive ${MMDB_LIB}
+     edio libssl.a libcrypto.a ${BSSL_ADD_LIB} ${libUnitTest}
+-    libz.a libpcre.a libexpat.a libxml2.a
++    z pcre expat xml2
+     ${IP2LOC_ADD_LIB} ${BROTLI_ADD_LIB} udns
+     -nodefaultlibs pthread rt ${LIBSAN} ${LIBATOMIC}
+     ${CMAKE_DL_LIBS} libstdc++.a crypt bcrypt m gcc_eh c c_nonshared gcc
+diff -up openlitespeed-1.7.16/test/CMakeLists.txt.4~ openlitespeed-1.7.16/test/CMakeLists.txt
+--- openlitespeed-1.7.16/test/CMakeLists.txt.4~	2022-05-13 20:30:06.000000000 +0200
++++ openlitespeed-1.7.16/test/CMakeLists.txt	2022-07-16 06:44:26.801416321 +0200
+@@ -166,7 +166,7 @@ SET( unittestlib
+     quic h2 lsquic bcrypt
+     -Wl,--whole-archive util lsr -Wl,--no-whole-archive
+     edio udns pthread rt ${CMAKE_DL_LIBS} ${libUnitTest} ${BSSL_ADD_LIB}
+-    libz.a libpcre.a libexpat.a libxml2.a
++    z pcre expat xml2
+     ${BROTLI_ADD_LIB} ${IP2LOC_ADD_LIB} ${MMDB_LIB} atomic
+     spdy crypt libssl.a libcrypto.a
+     -Wl,-Map=ols_unittest.map)
+diff -up openlitespeed-1.7.16/third-party/script/build_all.sh.4~ openlitespeed-1.7.16/third-party/script/build_all.sh
+--- openlitespeed-1.7.16/third-party/script/build_all.sh.4~	2022-07-16 02:55:17.000000000 +0200
++++ openlitespeed-1.7.16/third-party/script/build_all.sh	2022-07-16 06:44:26.800416318 +0200
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+-BUILD_LIBS="brotli zlib bssl bcrypt expat geoip ip2loc libmaxminddb luajit pcre psol udns unittest-cpp lmdb openldap flatbuffers libinjection zmq curl libxml2 libmodsec netmap"
++BUILD_LIBS="bssl bcrypt geoip ip2loc libmaxminddb luajit psol udns unittest-cpp lmdb openldap flatbuffers libinjection zmq curl libmodsec netmap"
+ 
+ cd `dirname "$0"`
+ cd ..
+diff -up openlitespeed-1.7.16/third-party/script/build_bssl.sh.4~ openlitespeed-1.7.16/third-party/script/build_bssl.sh
+--- openlitespeed-1.7.16/third-party/script/build_bssl.sh.4~	2022-07-16 02:55:17.000000000 +0200
++++ openlitespeed-1.7.16/third-party/script/build_bssl.sh	2022-07-16 06:44:26.801416321 +0200
+@@ -54,5 +54,6 @@ cp ssl/libssl.a    ../../../lib
+ cp decrepit/libdecrepit.a ../../../lib
+ 
+ cd ..
++mkdir -p ../../include
+ cp -r include/openssl ../../include/
+ 
+diff -up openlitespeed-1.7.16/third-party/script/build_curl.sh.4~ openlitespeed-1.7.16/third-party/script/build_curl.sh
+diff -up openlitespeed-1.7.16/third-party/script/build_lslb.sh.4~ openlitespeed-1.7.16/third-party/script/build_lslb.sh
+--- openlitespeed-1.7.16/third-party/script/build_lslb.sh.4~	2022-07-16 02:55:17.000000000 +0200
++++ openlitespeed-1.7.16/third-party/script/build_lslb.sh	2022-07-16 06:44:26.800416318 +0200
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+-BUILD_LIBS="brotli zlib bssl bcrypt expat geoip ip2loc libmaxminddb luajit pcre psol udns unittest-cpp lmdb openldap libinjection flatbuffers zmq "
++BUILD_LIBS="bssl bcrypt geoip ip2loc libmaxminddb luajit psol udns unittest-cpp lmdb openldap libinjection flatbuffers zmq "
+ 
+ cd `dirname "$0"`
+ cd ..
+diff -up openlitespeed-1.7.16/third-party/script/build_ols.sh.4~ openlitespeed-1.7.16/third-party/script/build_ols.sh
+--- openlitespeed-1.7.16/third-party/script/build_ols.sh.4~	2022-07-16 02:55:17.000000000 +0200
++++ openlitespeed-1.7.16/third-party/script/build_ols.sh	2022-07-16 06:44:26.800416318 +0200
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+-BUILD_LIBS="brotli zlib bssl bcrypt expat geoip ip2loc libmaxminddb luajit pcre psol udns unittest-cpp lmdb curl libxml2 yajl libmodsec"
++BUILD_LIBS="bssl bcrypt geoip ip2loc libmaxminddb luajit psol udns unittest-cpp lmdb curl libmodsec"
+ 
+ cd `dirname "$0"`
+ cd ..

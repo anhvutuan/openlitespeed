@@ -10,12 +10,21 @@ Source101: package-thirdparty.sh
 Patch0: openlitespeed-1.7.16-openmandriva.patch
 Patch1: openlitespeed-1.7.16-yajl-sources-have-moved.patch
 Patch2: openlitespeed-1.7.16-fix-build-with-preexisting-third-party.patch
+Patch3: openlitespeed-1.7.16-system-libs.patch
 Summary: High performance, lightweight web server
 URL: https://openlitespeed.org/
 License: GPLv3
 Group: Servers
 BuildRequires: cmake
 BuildRequires: make
+# Only after applying the system libs patch
+BuildRequires: pkgconfig(zlib)
+BuildRequires: pkgconfig(libbrotlidec)
+BuildRequires: pkgconfig(libbrotlienc)
+BuildRequires: pkgconfig(expat)
+BuildRequires: pkgconfig(libxml-2.0)
+BuildRequires: pkgconfig(libpcre)
+BuildRequires: pkgconfig(yajl)
 # Just so the internal boringssl fork will build
 BuildRequires: golang
 
@@ -53,8 +62,20 @@ find "%{buildroot}"/opt/openlitespeed/admin/conf -type d |xargs chmod 0700
 find "%{buildroot}"/opt/openlitespeed/admin/conf -type f |xargs chmod 0600
 find "%{buildroot}"/opt/openlitespeed/admin/tmp -type d |xargs chmod 0750
 
+# Remove stuff specific to other distros
+rm "%{buildroot}"/opt/openlitespeed/admin/misc/lsws.rc.gentoo \
+   "%{buildroot}"/opt/openlitespeed/admin/misc/lsws.rc \
+   "%{buildroot}"/opt/openlitespeed/admin/misc/rc-inst.sh \
+   "%{buildroot}"/opt/openlitespeed/admin/misc/rc-uninst.sh \
+   "%{buildroot}"/opt/openlitespeed/admin/misc/uninstall.sh
+
 # Remove build root from installed files
 sed -i "s#%{buildroot}##g" %{buildroot}/opt/openlitespeed/admin/misc/*
 
+# Move some stuff where it can be seen
+mkdir -p %{buildroot}%{_unitdir}
+mv %{buildroot}/opt/openlitespeed/admin/misc/lshttpd.service %{buildroot}%{_unitdir}/
+
 %files
 /opt/openlitespeed
+%{_unitdir}/lshttpd.service
