@@ -1,0 +1,15 @@
+diff -up openlitespeed-1.7.16/build.sh.omv~ openlitespeed-1.7.16/build.sh
+--- openlitespeed-1.7.16/build.sh.omv~	2022-07-16 02:35:01.881456450 +0200
++++ openlitespeed-1.7.16/build.sh	2022-07-16 02:35:25.394562409 +0200
+@@ -543,8 +543,10 @@ fi
+ 
+ cd ..
+ if [ ! -d third-party ]; then
+-
+     git clone https://github.com/litespeedtech/third-party.git
++fi
++# Looks like nobody ever tested this with third-party already in the tree...
++if true; then
+     mkdir third-party/lib64
+     cd third-party/script/
+ 

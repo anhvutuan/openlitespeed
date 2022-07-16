@@ -1,0 +1,27 @@
+diff -up openlitespeed-1.7.16/build.sh.1~ openlitespeed-1.7.16/build.sh
+--- openlitespeed-1.7.16/build.sh.1~	2022-07-16 01:55:13.162856543 +0200
++++ openlitespeed-1.7.16/build.sh	2022-07-16 01:56:24.645144649 +0200
+@@ -29,7 +29,10 @@ VERSIONNUMBER=
+ if [ "${OS}" = "FreeBSD" ] ; then
+     APP_MGRS="pkg"
+ elif [ "${OS}" = "Linux" ] ; then
+-    APP_MGRS="apt apt-get yum zypper apk"
++    # Using true rather than dnf -- we don't want
++    # a badly written script to use the system package
++    # manager!
++    APP_MGRS="true apt apt-get yum zypper apk"
+ elif [ "${OS}" = "Darwin" ] ; then
+     APP_MGRS="port brew"
+ else
+@@ -154,7 +157,10 @@ preparelibquic()
+ prepareLinux()
+ {
+     OSTYPE=unknowlinux
+-    if [ -f /etc/redhat-release ] ; then
++    if [ -e /etc/openmandriva-release ]; then
++        OSTYPE=OPENMANDRIVA
++        APP_MGR_CMD=true
++    elif [ -f /etc/redhat-release ] ; then
+         OSTYPE=CENTOS
+         yum -y update
+         yum -y install epel-release 

@@ -1,0 +1,14 @@
+diff -up openlitespeed-1.7.16/third-party/script/build_yajl.sh.omv~ openlitespeed-1.7.16/third-party/script/build_yajl.sh
+--- openlitespeed-1.7.16/third-party/script/build_yajl.sh.omv~	2022-07-16 02:28:14.612619369 +0200
++++ openlitespeed-1.7.16/third-party/script/build_yajl.sh	2022-07-16 02:28:56.348807827 +0200
+@@ -6,8 +6,9 @@ cd src
+ 
+ 
+     # Install YAJL2
+-    wget http://github.com/lloyd/yajl/tarball/2.1.0 -O yajl-2.1.0.tar.gz
++    wget https://github.com/lloyd/yajl/archive/refs/tags/2.1.0.tar.gz -O yajl-2.1.0.tar.gz
+     tar -xvzf yajl-2.1.0.tar.gz
++    mv yajl-2.1.0 lloyd-yajl-66cb08c
+     cd lloyd-yajl-66cb08c
+     ./configure -p $PREFIX
+ 
