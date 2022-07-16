@@ -1,0 +1,43 @@
+diff -up openlitespeed-1.7.16/dist/install.sh.omv~ openlitespeed-1.7.16/dist/install.sh
+--- openlitespeed-1.7.16/dist/install.sh.omv~	2022-07-16 16:15:46.704521560 +0200
++++ openlitespeed-1.7.16/dist/install.sh	2022-07-16 16:22:57.773055602 +0200
+@@ -34,7 +34,12 @@ inst_admin_php()
+         echo "Mkdir $LSWS_HOME/admin/fcgi-bin/ for installing admni_php"
+     fi
+         
+-    if [ "x$OS" = "xLinux" ] ; then
++    if true; then
++        # Prebuilt binaries are slightly more evil than Hitler
++	# Use the built-from-source OM package instead.
++	ln -s /usr/bin/lsphp $LSWS_HOME/admin/fcgi-bin/admin_php
++	HASADMINPHP=y
++    elif [ "x$OS" = "xLinux" ] ; then
+         if [ "x$OSTYPE" != "x64" ] ; then
+             $DLCMD $LSWS_HOME/admin/fcgi-bin/admin_php http://www.litespeedtech.com/packages/lsphp5_bin/i386/lsphp5
+         else
+@@ -135,7 +140,11 @@ check_os()
+     OSVER=
+     MARIADBCPUARCH=
+     
+-    if [ -f /etc/redhat-release ] ; then
++    if [ -e /etc/openmandriva-release ]; then
++        OSNAMEVER=OPENMANDRIVA
++	OSNAME=openmandriva
++	OSVER=5
++    elif [ -f /etc/redhat-release ] ; then
+         cat /etc/redhat-release | grep " 5." >/dev/null
+         if [ $? = 0 ] ; then
+             OSNAMEVER=CENTOS5
+@@ -245,7 +254,11 @@ inst_lsphp7()
+ {
+     check_os
+     check_arch
+-    if [ "x$OSNAME" = "xcentos" ] && [ "x$CPU_ARCH" = "xx86_64" ] ; then
++    if [ "x$OSNAME" = "xopenmandriva" ]; then
++        ln -sf "/usr/bin/lsphp" "$LSWS_HOME/fcgi-bin/lsphp8"
++        ln -sf "/usr/bin/lsphp" "$LSWS_HOME/fcgi-bin/lsphp7"
++        ln -sf "/usr/bin/lsphp" "$LSWS_HOME/fcgi-bin/lsphp"
++    elif [ "x$OSNAME" = "xcentos" ] && [ "x$CPU_ARCH" = "xx86_64" ] ; then
+         install_lsphp7_centos
+     elif [ "x$OSNAME" = "xubuntu" ] || [ "x$OSNAME" = "xdebian" ] && [ "x$CPU_ARCH" = "xx86_64" ] ; then
+         install_lsphp7_debian
