@@ -75,3 +75,29 @@ diff -up openlitespeed-1.7.16/third-party/script/build_ols.sh.4~ openlitespeed-1
  
  cd `dirname "$0"`
  cd ..
+diff -up BUILD/third-party/script/build_libmodsec.sh.omv~ BUILD/third-party/script/build_libmodsec.sh
+--- BUILD/third-party/script/build_libmodsec.sh.omv~	2022-08-07 14:27:01.610885912 +0200
++++ BUILD/third-party/script/build_libmodsec.sh	2022-08-07 14:30:07.013514790 +0200
+@@ -4,13 +4,6 @@ cd ..
+ PREFIX=`pwd`
+ cd src
+ 
+-
+-if [ ! -d lloyd-yajl-66cb08c ]; then
+-    ../script/build_yajl.sh
+-    cd src
+-fi
+-
+-
+ if [ ! -d ModSecurity ]; then
+     git clone https://github.com/SpiderLabs/ModSecurity
+ fi
+@@ -24,7 +17,7 @@ export PATH=/home/build/tools/bin/:$PATH
+ sh build.sh
+ git submodule init
+ git submodule update
+-CPPFLAGS="-fPIC $CPPFLAGS" ./configure --with-yajl=$PREFIX --with-geoip=$PREFIX --with-maxmind=$PREFIX --disable-shared --enable-static --with-pcre=$PREFIX --with-curl=$PREFIX --with-libxml=$PREFIX --with-lmdb=$PREFIX --with-lua=$PREFIX --disable-examples
++CPPFLAGS="-fPIC $CPPFLAGS" ./configure --with-yajl --with-geoip=$PREFIX --with-maxmind --disable-shared --enable-static --with-pcre --with-curl --with-libxml --with-lmdb --with-lua --disable-examples
+ make -j4
+ 
+ cp -r headers/modsecurity ../../include/
