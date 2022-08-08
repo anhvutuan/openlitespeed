@@ -97,7 +97,21 @@ diff -up BUILD/third-party/script/build_libmodsec.sh.omv~ BUILD/third-party/scri
  git submodule init
  git submodule update
 -CPPFLAGS="-fPIC $CPPFLAGS" ./configure --with-yajl=$PREFIX --with-geoip=$PREFIX --with-maxmind=$PREFIX --disable-shared --enable-static --with-pcre=$PREFIX --with-curl=$PREFIX --with-libxml=$PREFIX --with-lmdb=$PREFIX --with-lua=$PREFIX --disable-examples
-+CPPFLAGS="-fPIC $CPPFLAGS" ./configure --with-yajl --with-geoip=$PREFIX --with-maxmind --disable-shared --enable-static --with-pcre --with-curl --with-libxml --with-lmdb --with-lua --disable-examples
++CPPFLAGS="-fPIC $CPPFLAGS" ./configure --with-yajl --with-geoip=$PREFIX --with-maxmind --disable-shared --enable-static --with-pcre --with-curl=$PREFIX --with-libxml --with-lmdb --with-lua --disable-examples
  make -j4
  
  cp -r headers/modsecurity ../../include/
+diff -up BUILD/third-party/src/ModSecurity/build/lua.m4.omv~ BUILD/third-party/src/ModSecurity/build/lua.m4
+--- BUILD/third-party/src/ModSecurity/build/lua.m4.omv~	2022-08-08 13:18:02.501566574 +0200
++++ BUILD/third-party/src/ModSecurity/build/lua.m4	2022-08-08 13:20:39.639823134 +0200
+@@ -176,6 +176,9 @@ AC_DEFUN([CHECK_FOR_LUA_AT], [
+     elif test -e "${path}/include/lua5.1/lua.h"; then
+         lua_inc_path="${path}/include/lua5.1"
+ 	LUA_VERSION=501
++    elif test -e "${path}/include/luajit-2.1/lua.h"; then
++        lua_inc_path="${path}/include/luajit-2.1"
++	LUA_VERSION=501
+     elif test -e "${path}/include/luajit-2.0/lua.h"; then
+         lua_inc_path="${path}/include/luajit-2.0"
+ 	LUA_VERSION=501
+diff -up BUILD/third-party/src/ModSecurity/configure.ac.omv~ BUILD/third-party/src/ModSecurity/configure.ac

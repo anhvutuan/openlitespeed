@@ -26,11 +26,6 @@ BuildRequires: pkgconfig(expat)
 BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(libpcre)
 BuildRequires: pkgconfig(yajl)
-# FIXME Apparently some modules (ModSecurity)
-# use lua while others (lslb, ols) use luajit
-# We should probably make them agree on one
-# instead of risking nasty symbol clashes...
-BuildRequires: pkgconfig(lua)
 BuildRequires: pkgconfig(luajit)
 BuildRequires: pkgconfig(libzmq)
 BuildRequires: pkgconfig(libmaxminddb)
